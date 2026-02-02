@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Suivi de TIPE – Natan Ruiz – MPI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>Suivi de TIPE – Filiere MPI – Natan Ruiz</h1>
+    <p>Journal de bord de l'avancement de mes recherches</p>
+</header>
+
+<div class="filters-container">
+    <div class="filter-group">
+        <label for="sort-select">Trier par:</label>
+        <select id="sort-select">
+            <option value="date-desc">Date (plus récent)</option>
+            <option value="date-asc">Date (plus ancien)</option>
+            <option value="title-asc">Titre (A-Z)</option>
+            <option value="title-desc">Titre (Z-A)</option>
+        </select>
+    </div>
+    <div class="filter-group">
+        <label for="tag-filter">Filtrer par balise:</label>
+        <select id="tag-filter">
+            <option value="">Toutes les balises</option>
+        </select>
+    </div>
+</div>
+
+<main id="articles-container">
+    <div class="loading-message">Chargement des articles...</div>
+</main>
+
+<footer>
+    &copy; 2026 – Natan Ruiz – Etudiant en MPI – TIPE
+</footer>
+
+<!-- Load DataStorage first, then main script -->
+<script src="data-storage.js"></script>
+<script src="main-github.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Administration - Gestion des balises</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .admin-section {
+            background-color: #ffffff;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .admin-section h2 {
+            margin-top: 0;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.85em;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tag-item {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .tag-item .tag-name {
+            margin-right: 10px;
+        }
+
+        .article-tags-container {
+            margin-top: 20px;
+        }
+
+        .article-row {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .article-row:last-child {
+            border-bottom: none;
+        }
+
+        .article-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .article-current-tags {
+            margin-bottom: 10px;
+        }
+
+        .article-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .tag-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .article-tag-selector {
+            margin-top: 10px;
+        }
+
+        .tag-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+            margin-bottom: 5px;
+        }
+
+        .tag-button {
+            padding: 6px 14px;
+            border: 2px solid var(--tag-color, #007bff);
+            border-radius: 20px;
+            background-color: transparent;
+            color: var(--tag-color, #007bff);
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+        }
+
+        .tag-button:hover {
+            background-color: color-mix(in srgb, var(--tag-color, #007bff) 15%, transparent);
+        }
+
+        .tag-button.selected {
+            background-color: var(--tag-color, #007bff);
+            color: white;
+        }
+
+        .tag-button.selected:hover {
+            background-color: color-mix(in srgb, var(--tag-color, #007bff) 85%, black);
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .color-preview {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-left: 10px;
+            vertical-align: middle;
+            border: 1px solid #ccc;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box;
+            min-height: 150px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .articles-list {
+            margin-top: 15px;
+        }
+
+        .article-item {
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background-color: #fafafa;
+        }
+
+        .article-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .article-item-title {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .article-item-date {
+            color: #777;
+            font-size: 0.9em;
+        }
+
+        .article-item-content {
+            color: #555;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            max-height: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .article-item-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .article-item-summary {
+            color: #888;
+            font-size: 0.85em;
+            font-style: italic;
+            margin-top: 5px;
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            border-left: 3px solid #007bff;
+        }
+
+        .help-text {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Login styles */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 0 20px;
+        }
+
+        .login-box {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .login-box h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .login-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Edit modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Login Form -->
+<div id="login-section" class="login-container">
+    <div class="login-box">
+        <h2>Connexion Administrateur</h2>
+        <div id="login-error" class="login-error">Mot de passe incorrect</div>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" required placeholder="Entrez le mot de passe">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Se connecter</button>
+        </form>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="index.html" class="back-link">&larr; Retour au site</a>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Content (hidden by default) -->
+<div id="admin-section" class="hidden">
+<header>
+    <h1>Administration</h1>
+    <p>Gestion des balises pour les articles</p>
+</header>
+
+<div class="admin-container">
+    <a href="index.html" class="back-link">&larr; Retour au site</a>
+    <button class="btn btn-secondary" style="float: right;" onclick="logout()">Déconnexion</button>
+
+    <div id="message" class="message"></div>
+
+    <div class="admin-section">
+        <h2>Créer un nouvel article</h2>
+        <form id="create-article-form">
+            <div class="form-group">
+                <label for="article-title">Titre de l'article</label>
+                <input type="text" id="article-title" name="title" required placeholder="Ex: Présentation du TIPE">
+            </div>
+            <div class="form-group">
+                <label for="article-date">Date</label>
+                <input type="text" id="article-date" name="date" placeholder="Ex: 15 septembre 2026 (optionnel)">
+            </div>
+            <div class="form-group">
+                <label for="article-summary">Résumé de l'article</label>
+                <input type="text" id="article-summary" name="summary" placeholder="Résumé court pour l'aperçu (optionnel)">
+                <p class="help-text">Ce résumé sera affiché dans la liste des articles pour un aperçu rapide.</p>
+            </div>
+            <div class="form-group">
+                <label for="article-content">Contenu de l'article (HTML autorisé)</label>
+                <textarea id="article-content" name="content" required placeholder="Entrez le contenu de l'article...
+
+Vous pouvez utiliser des balises HTML comme:
+- <p>paragraphe</p>
+- <strong>texte en gras</strong>
+- <br> pour un retour à la ligne"></textarea>
+                <p class="help-text">Astuce: Utilisez &lt;p&gt;...&lt;/p&gt; pour les paragraphes, &lt;strong&gt;...&lt;/strong&gt; pour le gras, &lt;br&gt; pour les retours à la ligne.</p>
+            </div>
+            <div class="form-group">
+                <label>Balises de l'article</label>
+                <div id="create-article-tags" class="tag-buttons">
+                    <em>Chargement des balises...</em>
+                </div>
+                <p class="help-text">Cliquez sur les balises pour les sélectionner (plusieurs balises possibles).</p>
+            </div>
+            <button type="submit" class="btn btn-primary">Créer l'article</button>
+        </form>
+    </div>
+
+    <div class="admin-section">
+        <h2>Articles existants</h2>
+        <div id="articles-list-loading" class="loading">Chargement des articles...</div>
+        <div id="articles-list" class="articles-list"></div>
+    </div>
+
+    <div class="admin-section">
+        <h2>Créer une nouvelle balise</h2>
+        <form id="create-tag-form">
+            <div class="form-group">
+                <label for="tag-name">Nom de la balise</label>
+                <input type="text" id="tag-name" name="name" required placeholder="Ex: Recherche, Implémentation, Résultats...">
+            </div>
+            <div class="form-group">
+                <label for="tag-color">Couleur de la balise</label>
+                <input type="color" id="tag-color" name="color" value="#007bff">
+                <span class="color-preview" id="color-preview" style="background-color: #007bff;"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Créer la balise</button>
+        </form>
+    </div>
+
+    <div class="admin-section">
+        <h2>Balises existantes</h2>
+        <div id="tags-loading" class="loading">Chargement des balises...</div>
+        <div id="tags-list" class="tag-list"></div>
+    </div>
+
+    <div class="admin-section">
+        <h2>Attribuer des balises aux articles</h2>
+        <div id="articles-loading" class="loading">Chargement des articles...</div>
+        <div id="articles-container" class="article-tags-container"></div>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 - Natan Ruiz - Administration TIPE
+</footer>
+</div>
+
+<!-- Edit Article Modal -->
+<div id="edit-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Modifier l'article</h3>
+            <button class="modal-close" onclick="closeEditModal()">&times;</button>
+        </div>
+        <form id="edit-article-form">
+            <input type="hidden" id="edit-article-id">
+            <div class="form-group">
+                <label for="edit-article-title">Titre de l'article</label>
+                <input type="text" id="edit-article-title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-article-date">Date</label>
+                <input type="text" id="edit-article-date" name="date">
+            </div>
+            <div class="form-group">
+                <label for="edit-article-summary">Résumé de l'article</label>
+                <input type="text" id="edit-article-summary" name="summary">
+            </div>
+            <div class="form-group">
+                <label for="edit-article-content">Contenu de l'article (HTML autorisé)</label>
+                <textarea id="edit-article-content" name="content" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Balises de l'article</label>
+                <div id="edit-article-tags" class="tag-buttons">
+                    <em>Chargement des balises...</em>
+                </div>
+                <p class="help-text">Cliquez sur les balises pour les sélectionner (plusieurs balises possibles).</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn btn-success">Enregistrer les modifications</button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Load DataStorage first, then admin script -->
+<script src="data-storage.js"></script>
+<script src="admin-github.js"></script>
+
+</body>
+</html>
